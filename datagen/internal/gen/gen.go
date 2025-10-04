@@ -2,10 +2,13 @@ package gen
 
 import (
 	"datagen/internal/types"
-	"fmt"
 	"math/rand"
+	"strconv"
+	"time"
 )
 
+var startOfDisruptionsInterval = time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC)
+var endOfDisruptionsInterval = time.Date(2023, 12, 31, 23, 59, 59, 0, time.UTC)
 var characters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
 
 type Generator struct {
@@ -25,55 +28,74 @@ func (g Generator) Rating(from, to int) types.Rating {
 	}
 }
 
-type locationInput struct {
-	latitudeMin  float32
-	latitudeMax  float32
-	longitudeMin float32
-	longitudeMax float32
+func (g Generator) Schedule() types.Schedule {
+    // TODO: fill-in using real data
+	return types.Schedule{}
 }
 
-var lesserPolandLocationInput = locationInput{
-	latitudeMin:  49.365327876304754,
-	latitudeMax:  50.38482653777126,
-	longitudeMin: 19.376154465097827,
-	longitudeMax: 21.378412702293314,
-}
-
-func (g Generator) Location(input locationInput) types.Location {
-	return types.Location{
-		Latitude:  g.floatrange(input.latitudeMin, input.latitudeMax),
-		Longitude: g.floatrange(input.longitudeMin, input.longitudeMax),
+func (g Generator) Users() []types.User {
+	disruptions := g.Disruptions()
+	users := make(map[string]types.User)
+	for _, disruption := range disruptions {
+		user, exists := users[disruption.User]
+		if !exists {
+			user = types.User{
+				Username:       disruption.User,
+				HashedPassword: "",
+				Rating:         types.Rating{},
+			}
+		}
+		user.Rating.Upvotes += disruption.Rating.Upvotes
+		user.Rating.Downvotes += disruption.Rating.Downvotes
+		users[disruption.User] = user
 	}
-}
-
-func (g Generator) User() types.User {
-	id := g.string(8)
-	return types.User{
-		Username:       fmt.Sprintf("user-%s", id),
-		HashedPassword: g.string(64),
-		Rating:         g.Rating(-500, 500),
+	var result []types.User
+	for _, user := range users {
+		result = append(result, user)
 	}
+	return result
 }
 
-func (g Generator) Disruption(username string) types.Disruption {
+func (g Generator) allDisruptions(edges *[]types.Edge) []types.Disruption {
+	var disruptions []types.Disruption
+	for _ = range 10_000 { // disruptions count
+		disruptions = append(disruptions, g.Disruption(edges))
+	}
+	return disruptions
+}
+
+func (g Generator) randomDate() time.Time {
+	unix := g.int64range(startOfDisruptionsInterval.Unix(), endOfDisruptionsInterval.Unix())
+	return time.Unix(unix, 0)
+}
+
+func (g Generator) Disruption(edges *[]types.Edge) types.Disruption {
+	edge := (*edges)[g.intrange(0, len(*edges))]
 	return types.Disruption{
-		Type:     g.stringelement(types.DisruptionTypes),
-		Location: g.Location(lesserPolandLocationInput),
-		User:     username,
-		Rating:   g.Rating(-25, 25),
+		Type:       g.stringelement(types.DisruptionTypes),
+		Edge:       edge,
+		User:       "dummy_" + strconv.Itoa(g.intrange(0, 500)),
+		Rating:     g.Rating(-500, 500),
+		ReportedAt: g.randomDate(),
 	}
 }
 
-func (g Generator) TransportStop() types.TransportStop {
-	id := g.string(8)
-	return types.TransportStop{
-		Type:     g.stringelement(types.TransportStopTypes),
-		Name:     fmt.Sprintf("stop-%s", id),
-		Location: g.Location(lesserPolandLocationInput),
+func (g Generator) Disruptions() []types.Disruption {
+	schedule := g.Schedule()
+	edges := schedule.ToEdges()
+	all := g.allDisruptions(&edges)
+	var res []types.Disruption
+	for _, disruption := range all {
+		if disruption.Alive() {
+			res = append(res, disruption)
+		}
 	}
+	return res
 }
 
-// TODO: Generate edge
+func (g Generator) int64range(from, to int64) int64 {
+	return g.generator.Int63n(to-from) + from
+}
 
 func (g Generator) intrange(from, to int) int {
 	return g.generator.Intn(to-from) + from
