@@ -1,8 +1,11 @@
-import requests
 import uvicorn
+import requests
 from fastapi import FastAPI
+from routes.predict import router as predictions_router
 
 app = FastAPI()
+
+app.include_router(predictions_router)
 
 
 @app.get("/hello")

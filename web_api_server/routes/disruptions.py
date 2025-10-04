@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException
 import db
 import schemas
 
-router = APIRouter()
+router = APIRouter(tags=["disruptions"])
 
 
 @router.post("/", response_model=schemas.DisruptionOut)
