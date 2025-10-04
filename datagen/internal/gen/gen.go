@@ -34,7 +34,8 @@ func (g Generator) Schedule() types.Schedule {
 }
 
 func (g Generator) Users() []types.User {
-	disruptions := g.Disruptions()
+    edges := g.Schedule().ToEdges()
+	disruptions := g.allDisruptions(&edges)
 	users := make(map[string]types.User)
 	for _, disruption := range disruptions {
 		user, exists := users[disruption.User]
