@@ -7,8 +7,8 @@ import (
 	"time"
 )
 
-var startOfDisruptionsInterval = time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC)
-var endOfDisruptionsInterval = time.Date(2023, 12, 31, 23, 59, 59, 0, time.UTC)
+var startOfDisruptionsInterval = time.Date(2025, 1, 1, 0, 0, 0, 0, time.UTC)
+var endOfDisruptionsInterval = time.Date(2025, 12, 31, 23, 59, 59, 0, time.UTC)
 var characters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
 
 type Generator struct {
