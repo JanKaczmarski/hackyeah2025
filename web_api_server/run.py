@@ -5,6 +5,7 @@ from fastapi import FastAPI
 from auth import router as auth_router
 from routes.disruptions import router as disruptions_router
 from routes.travel import router as travel_router
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
