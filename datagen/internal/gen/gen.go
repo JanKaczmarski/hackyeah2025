@@ -58,9 +58,14 @@ func (g Generator) Users() []types.User {
 }
 
 func (g Generator) allDisruptions(edges *[]types.Edge) []types.Disruption {
+    now := time.Now()
 	var disruptions []types.Disruption
 	for _ = range 10_000 { // disruptions count
-		disruptions = append(disruptions, g.Disruption(edges))
+        curr := g.Disruption(edges)
+        if curr.ReportedAt.After(now) {
+            continue
+        }
+		disruptions = append(disruptions, curr)
 	}
 	return disruptions
 }
