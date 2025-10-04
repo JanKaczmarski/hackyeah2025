@@ -2,6 +2,7 @@ FROM python:3.11-slim
 
 # Set work directory
 WORKDIR /app
+VOLUME ["/app/data"]
 
 # Install dependencies
 COPY requirements.txt .
