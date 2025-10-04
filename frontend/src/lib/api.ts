@@ -1,5 +1,5 @@
 // API base URL - change this to your actual API endpoint
-const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000/api";
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 class ApiError extends Error {
   constructor(
@@ -32,6 +32,7 @@ export const api = {
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
     });
     return handleResponse<T>(response);
   },
@@ -42,6 +43,7 @@ export const api = {
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
       body: data ? JSON.stringify(data) : undefined,
     });
     return handleResponse<T>(response);
@@ -53,6 +55,7 @@ export const api = {
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
       body: data ? JSON.stringify(data) : undefined,
     });
     return handleResponse<T>(response);
@@ -64,6 +67,7 @@ export const api = {
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
     });
     return handleResponse<T>(response);
   },
@@ -74,6 +78,7 @@ export const api = {
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
       body: data ? JSON.stringify(data) : undefined,
     });
     return handleResponse<T>(response);

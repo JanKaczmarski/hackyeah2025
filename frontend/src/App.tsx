@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "./lib/queryClient";
@@ -7,6 +8,7 @@ import { MapPage } from "./pages/MapPage";
 import { Login } from "./pages/Login";
 import { Register } from "./pages/Register";
 import { Settings } from "./pages/Settings";
+import { useAuthStore } from "./stores/authStore";
 
 const router = createBrowserRouter([
   {
@@ -38,6 +40,21 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+  const checkAuth = useAuthStore((state) => state.checkAuth);
+
+  useEffect(() => {
+    checkAuth().finally(() => setIsCheckingAuth(false));
+  }, [checkAuth]);
+
+  if (isCheckingAuth) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-neutral-600">Loading...</div>
+      </div>
+    );
+  }
+
   return (
     <QueryClientProvider client={queryClient}>
       <RouterProvider router={router} />
