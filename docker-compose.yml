@@ -1,0 +1,19 @@
+version: "3"
+services:
+  web-api-server:
+    build:
+      context: web_api_server
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./web_api_server:/app
+
+  ai-model-wrapper:
+    build:
+      context: ai_model_wrapper
+      dockerfile: Dockerfile
+    ports:
+      - "8001:8000"
+    volumes:
+      - ./ai_model_wrapper:/app
