@@ -10,6 +10,7 @@ def get_connection():
     conn.row_factory = sqlite3.Row
     return conn
 
+
 def init_db():
     conn = get_connection()
     cur = conn.cursor()
@@ -20,6 +21,15 @@ def init_db():
         password TEXT NOT NULL
     )
     """)
+    cur.execute("""
+    CREATE TABLE IF NOT EXISTS disruptions (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        type TEXT NOT NULL,
+        latitude REAL NOT NULL,
+        longitude REAL NOT NULL,
+        username TEXT NOT NULL,
+        rating INTEGER DEFAULT 0
+    )
+    """)
     conn.commit()
     conn.close()
-
