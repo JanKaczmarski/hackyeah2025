@@ -27,11 +27,21 @@ var DisruptionTypes = []string{
 	"Object on Road",
 }
 
+var DisruptionTypesTtl = map[string]time.Duration{
+	"Accident":          time.Minute * 10,
+	"Traffic Jam":       time.Minute * 10,
+	"Road Closure":      time.Minute * 10,
+	"Construction":      time.Minute * 10,
+	"Weather Condition": time.Mintue * 10,
+	"Object on Road":    time.Minute * 10,
+}
+
 type Disruption struct {
-	Type     string
-	Location Location
-	User     string
-	Rating   Rating
+	Type       string
+	Edge       Edge
+	User       string
+	Rating     Rating
+	ReportedAt time.Time
 }
 
 var TransportStopTypes = []string{
@@ -67,4 +77,30 @@ type NamedRoute struct {
 
 type Schedule struct {
 	Routes []NamedRoute
+}
+
+func (s Schedule) ToEdges() []Edge {
+	seen := make(map[string]bool)
+	var result []Edge
+
+	for _, nr := range s.Routes {
+		for _, e := range nr.Edges {
+			// Create a unique key for the edge
+			key := e.From.Type + "|" + e.From.Name + "|" +
+				e.To.Type + "|" + e.To.Name + "|"
+
+			if !seen[key] {
+				seen[key] = true
+				result = append(result, e)
+			}
+		}
+	}
+	return result
+}
+
+func (d Disruption) Alive() bool {
+	ttl := DisruptionTypesTtl[d.Type]
+	return time.Now().After(d.ReportedAt) &&
+		time.Now().Before(d.ReportedAt.Add(ttl))
+
 }
