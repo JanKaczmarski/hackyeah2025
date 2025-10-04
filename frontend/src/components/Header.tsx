@@ -60,7 +60,7 @@ export function Header() {
 
         {/* Mobile Navigation Menu */}
         {isMenuOpen && (
-          <nav className="mt-4 pb-2 border-t border-primary-500 pt-4">
+          <nav className="mt-4 pb-2 border-t border-primary-500 pt-4 z-50">
             <ul className="space-y-2">
               <li>
                 <Link
@@ -95,7 +95,7 @@ export function Header() {
                   className="block mb-3 px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors"
                 >
                   <p className="text-sm text-primary-100">Signed in as</p>
-                  <p className="font-semibold">{user.name}</p>
+                  <p className="font-semibold">{user.username}</p>
                   <p className="text-xs text-primary-200 mt-1">
                     Click to manage account
                   </p>
