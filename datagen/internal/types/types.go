@@ -32,7 +32,7 @@ var DisruptionTypesTtl = map[string]time.Duration{
 	"Traffic Jam":       time.Minute * 10,
 	"Road Closure":      time.Minute * 10,
 	"Construction":      time.Minute * 10,
-	"Weather Condition": time.Mintue * 10,
+	"Weather Condition": time.Minute * 10,
 	"Object on Road":    time.Minute * 10,
 }
 
