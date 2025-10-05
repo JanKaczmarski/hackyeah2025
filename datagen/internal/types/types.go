@@ -1,6 +1,8 @@
 package types
 
-import "time"
+import (
+	"time"
+)
 
 type Rating struct {
 	Upvotes   int
@@ -28,12 +30,12 @@ var DisruptionTypes = []string{
 }
 
 var DisruptionTypesTtl = map[string]time.Duration{
-	"Accident":          time.Minute * 10,
-	"Traffic Jam":       time.Minute * 10,
-	"Road Closure":      time.Minute * 10,
-	"Construction":      time.Minute * 10,
-	"Weather Condition": time.Minute * 10,
-	"Object on Road":    time.Minute * 10,
+	"Accident":          time.Hour * 2,
+	"Traffic Jam":       time.Minute * 30,
+	"Road Closure":      time.Hour * 2,
+	"Construction":      time.Hour * 24 * 7,
+	"Weather Condition": time.Hour * 3,
+	"Object on Road":    time.Hour,
 }
 
 type Disruption struct {

@@ -48,5 +48,5 @@ func main() {
 	http.HandleFunc("/user", user)
 	http.HandleFunc("/disruption", disruption)
 
-	http.ListenAndServe(":2137", nil)
+	fmt.Print(http.ListenAndServe(":2137", nil))
 }
