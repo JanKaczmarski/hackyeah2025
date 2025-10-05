@@ -365,7 +365,6 @@ func (g Generator) Schedule() types.Schedule {
 		for j, edge := range route.Edges {
 			distance := distance(edge.From.Location, edge.To.Location)
 			edge.Duration = time.Duration(1.3 * distance / 40 * float64(time.Hour.Nanoseconds()))
-			fmt.Println(distance, edge.Duration)
 			route.Edges[j] = edge
 		}
 		schedule.Routes[i] = route
@@ -455,20 +454,12 @@ func (g Generator) floatrange(from, to float32) float32 {
 	return g.generator.Float32()*(to-from) + from
 }
 
-func (g Generator) string(length int) string {
-	rs := make([]rune, length)
-	for i := range rs {
-		rs[i] = characters[rand.Intn(len(characters))]
-	}
-	return string(rs)
-}
-
 func (g Generator) stringelement(slice []string) string {
-	return slice[rand.Intn(len(slice))]
+	return slice[g.generator.Intn(len(slice))]
 }
 
 func (g Generator) edgeelement(slice []types.Edge) types.Edge {
-	return slice[rand.Intn(len(slice))]
+	return slice[g.generator.Intn(len(slice))]
 }
 
 func distance(l1, l2 types.Location) float64 {
