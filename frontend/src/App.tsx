@@ -8,6 +8,7 @@ import { MapPage } from "./pages/MapPage";
 import { Login } from "./pages/Login";
 import { Register } from "./pages/Register";
 import { Settings } from "./pages/Settings";
+import { TravelPage } from "./pages/TravelPage";
 import { useAuthStore } from "./stores/authStore";
 
 const router = createBrowserRouter([
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
       {
         path: "map",
         element: <MapPage />,
+      },
+      {
+        path: "travel",
+        element: <TravelPage />,
       },
       {
         path: "settings",
